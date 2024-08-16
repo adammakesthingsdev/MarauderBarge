@@ -1,0 +1,7 @@
+#Ignore all the sensitive information files!
+.env
+creds.json
+dist/
+.vscode/
+config/default.json
+node_modules/

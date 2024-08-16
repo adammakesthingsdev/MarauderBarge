@@ -1,0 +1,29 @@
+{
+  "dependencies": {
+    "@google-cloud/local-auth": "^3.0.1",
+    "@googlemaps/addressvalidation": "^2.4.0",
+    "@googlemaps/google-maps-services-js": "^3.4.0",
+    "airtable": "^0.12.2",
+    "config": "^3.3.12",
+    "fastify": "^4.28.1",
+    "google-auth-library": "^9.13.0",
+    "ipp": "^2.0.1",
+    "node-downloader-helper": "^2.1.9",
+    "pdfkit": "^0.15.0",
+    "shipengine": "^1.0.7"
+  },
+  "scripts": {
+    "test": "test",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/apiwrapper.js",
+    "ship": "node dist/test.js"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@types/config": "^3.3.4",
+    "@types/ipp": "^2.0.5",
+    "@types/node": "^22.3.0",
+    "@types/pdfkit": "^0.13.4",
+    "typescript": "^5.5.4"
+  }
+}
