@@ -1,3 +1,8 @@
+/*
+    WIP: This module serves as an API to the frigate.
+*/
+
+
 import Fastify from 'fastify';
 import config from 'config';
 

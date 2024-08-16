@@ -5,6 +5,7 @@
     "@googlemaps/google-maps-services-js": "^3.4.0",
     "airtable": "^0.12.2",
     "config": "^3.3.12",
+    "dotenv": "^16.4.5",
     "fastify": "^4.28.1",
     "google-auth-library": "^9.13.0",
     "ipp": "^2.0.1",

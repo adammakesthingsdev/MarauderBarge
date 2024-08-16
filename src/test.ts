@@ -1,6 +1,8 @@
-import Airtable from 'airtable';
+/*
+    Test file. It's for testing. Who'd've thought?
+*/
+
 import { buyLabel, getRate } from './labelapi.js';
-import ipp from 'ipp';
 import { ShipRequest } from './labelapi.js';
 
 const request:ShipRequest = {
