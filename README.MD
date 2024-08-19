@@ -13,7 +13,7 @@ The **dinghy** is under the direct command of the frigate, but by itself doesn't
 
 ## Technical details
 The entire system is written in TypeScript with as strict typing as possible. It's designed such that the codebase is the same for both frigate and dinghy, and the only difference is which file is deployed. This does not impact security - deployers should only put the required credentials for each system type in the environment variables.
-In addition, everything is designed to be as modular and configurable as possible - not only can each module be used by itself (i.e. printing functionality), but many changes can be made very easily by setting values in a configuration file. Adding a dinghy should be as simple as filling out a few basic details like its name and IP.
+In addition, everything is designed to be as modular and configurable as possible - not only can each module be used by itself (i.e. printing functionality), but many changes can be made very easily by setting values in a configuration file. Adding a dinghy should be as simple as filling out a few basic details like its name and location.
 
 ## Filestructure
 * **config/** | *Configuration folder*
@@ -45,16 +45,15 @@ In addition, everything is designed to be as modular and configurable as possibl
 | Get best rate                                        | In progress   |
 | Fully typed                                          | In progress   |
 | Frigate REST API                                     | In progress   |
-| Authentication scheme                                | To do         |
-| Frigate/dinghy seperation                            | To do         |
-| Frigate/dinghy communication protocol                | To do         |
+| Authentication scheme                                | In progress   |
+| Frigate/dinghy seperation                            | In progress   |
+| Frigate/dinghy communication protocol                | In progress   |
 | Frigate frontend                                     | To do         |
-| Detailed deployment instructions/setup               | To do         |
+| Detailed deployment instructions/setup               | In progress   |
 | Full Mail Team integration                           | To do         |
 | Multiple dinghy instances in a raft / containerizing | To do         |
 
 ## Install / deploy instructions
-**Until the seperation of frigates and dinghies is finished, do all of this on the same machine!**
 * Setup the project basics:
   * Clone this repo to a folder with `git clone https://github.com/adammakesthingsdev/MarauderBarge` and `cd MarauderBarge`.
   * Make sure node is installed, then run `npm install`
@@ -72,10 +71,15 @@ In addition, everything is designed to be as modular and configurable as possibl
   * Create an API key if you need to, and configure all carriers as you wish. Sandbox or not, copy the carrier code of the one you'd like to use. If you're testing and unsure, use "Stamps.com".
   * Fill in the carrier ID in *config/default.json*. Ignore the dinghy settings!
   * Add your API key to .env as `SHIPENGINE_API`.
+* Setup your dinghies (frigate only!):
+  * Following the template, give each dinghy a name, location, and type. Add an authentication key.
+* Setup your dinghies (dinghies only!):
+  * Change the authentication key to the same as the frigate.
 * Connect your printer (dinghies only!):
   * Make sure your printer is IPP-capable. The easiest way to do this if it isn't is to install CUPS. You're on your own there, may the odds be ever in your favour.
   * Edit *config/default.json* with your printer's IP address - in cups, this is literally just the URL of the printer's page. Ignore the frigate settings!
 * Final steps (dinghies and frigates):
   * Build the project with `npm run build`
-  * Run the test file with `npm run ship`. If all goes well, you should have a sample label printed!
+  * Run the frigate's server with `npm run frigate`
+  * Run each dinghy with `npm run dinghy`
   * Catch your breath. You're finally safe from Shia Labeouf.
