@@ -11,20 +11,26 @@
     "ipp": "^2.0.1",
     "node-downloader-helper": "^2.1.9",
     "pdfkit": "^0.15.0",
-    "shipengine": "^1.0.7"
+    "shipengine": "^1.0.7",
+    "simple-crypto-js": "^3.0.1"
   },
   "scripts": {
     "test": "test",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/apiwrapper.js",
-    "ship": "node dist/test.js"
+    "ship": "node dist/test.js",
+    "dinghy": "node dist/dinghy.js",
+    "frigate": "node dist/frigate.js"
   },
   "type": "module",
   "devDependencies": {
     "@types/config": "^3.3.4",
+    "@types/crypto-js": "^4.2.2",
     "@types/ipp": "^2.0.5",
     "@types/node": "^22.3.0",
     "@types/pdfkit": "^0.13.4",
-    "typescript": "^5.5.4"
+    "@types/ws": "^8.5.12",
+    "typescript": "^5.5.4",
+    "ws": "^8.18.0"
   }
 }

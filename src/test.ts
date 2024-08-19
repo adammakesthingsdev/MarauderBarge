@@ -2,8 +2,10 @@
     Test file. It's for testing. Who'd've thought?
 */
 
-import { buyLabel, getRate } from './labelapi.js';
-import { ShipRequest } from './labelapi.js';
+import { encodeSecret, checkSecret } from "./components/auth.js";
+/*
+import { buyLabel, getRate } from './components/labelapi.js';
+import { ShipRequest } from './components/labelapi.js';
 
 const request:ShipRequest = {
     toAddr:{
@@ -40,3 +42,8 @@ async function testBuy(){
 }
 
 testBuy();
+*/
+
+const secret = encodeSecret();
+const matches = checkSecret(secret);
+console.log(matches)

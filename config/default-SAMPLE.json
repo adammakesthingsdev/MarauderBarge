@@ -1,9 +1,18 @@
 {
     "frigate": {
         "host": "0.0.0.0",
-        "port": 3000
+        "port": 3000,
+        "authkey":"<YourSuperSecretKey>",
+        "dinghies":[
+            {
+                "name":"Jim",
+                "location":"library",
+                "type":"thermal-printer"
+            }
+        ]
     },
     "dinghy":{
-        "printer-url":"http://<YourPrinterIP>:631/printers/<YourPrinter>"
+        "printer-url":"http://<YourPrinterIP>:631/printers/<YourPrinter>",
+        "authkey":"<YourSuperSecretKey>"
     }
 }

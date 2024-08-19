@@ -11,7 +11,6 @@ import { CreateLabelFromRateTypes } from "shipengine/esm/create-label-from-rate"
 import { printFromURL } from "./print.js";
 import 'dotenv/config';
 
-const l = process.env
 const shipengine = new ShipEngine(process.env.SHIPENGINE_API!);
 
 const auth = new GoogleAuth({
