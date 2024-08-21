@@ -21,10 +21,16 @@ In addition, everything is designed to be as modular and configurable as possibl
 * dist/ | *Build location for js / map files*
 * node_modules/ | *External modules*
 * **src/** | *Main TypeScript files*
-  * **apiwrapper.ts** | *REST API wrapper for frigate*
-  * **labelapi.ts** | *Label purchasing / rate finding*
-  * **print.ts** | *Local label printing / print utils*
+  * **components**
+    * **_frigate_class_types.ts** | *Typing for frigate*
+    * **auth.ts** | *Authentication/secret checking between frigate/dinghy*
+    * **errors.ts** | *Error typing*
+    * **labelapi.ts** | *Label purchasing / rate finding*
+    * **messages.ts** | *Typing for frigate/dinghy messages*
+    * **print.ts** | *Local label printing / print utils*
   * **test.ts** | *Test file. It's jank.*
+  * **frigate.ts** | *Frigate/server main file*
+  * **dinghy.ts** | *Dinghy/node main file*
 * **.env** | *Environment variables for sensitive information*
 * **.gitignore** | *Ignore tracking of sensitive information*
 * creds.json | *Google API credentials file for frigate only*
@@ -41,15 +47,15 @@ In addition, everything is designed to be as modular and configurable as possibl
 | Printing                                             | Done          |
 | Rate query                                           | Done          |
 | Purchase label                                       | Done          |
-| Fully configurable                                   | In progress   |
+| Fully configurable                                   | Mostly        |
 | Get best rate                                        | In progress   |
-| Fully typed                                          | In progress   |
+| Fully typed                                          | Done          |
 | Frigate REST API                                     | In progress   |
-| Authentication scheme                                | In progress   |
-| Frigate/dinghy seperation                            | In progress   |
-| Frigate/dinghy communication protocol                | In progress   |
+| Authentication scheme                                | Mostly        |
+| Frigate/dinghy seperation                            | Done          |
+| Frigate/dinghy communication protocol                | Mostly        |
 | Frigate frontend                                     | To do         |
-| Detailed deployment instructions/setup               | In progress   |
+| Detailed deployment instructions/setup               | Mostly        |
 | Full Mail Team integration                           | To do         |
 | Multiple dinghy instances in a raft / containerizing | To do         |
 

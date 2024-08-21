@@ -13,6 +13,7 @@
     },
     "dinghy":{
         "printer-url":"http://<YourPrinterIP>:631/printers/<YourPrinter>",
-        "authkey":"<YourSuperSecretKey>"
+        "authkey":"<YourSuperSecretKey>",
+        "host":"ws://<YourSuperSecretHostIP>:3000"
     }
 }

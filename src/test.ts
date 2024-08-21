@@ -2,8 +2,8 @@
     Test file. It's for testing. Who'd've thought?
 */
 
-import { encodeSecret, checkSecret } from "./components/auth.js";
-/*
+//import { encodeSecret, checkSecret } from "./components/auth.js";
+
 import { buyLabel, getRate } from './components/labelapi.js';
 import { ShipRequest } from './components/labelapi.js';
 
@@ -42,8 +42,3 @@ async function testBuy(){
 }
 
 testBuy();
-*/
-
-const secret = encodeSecret();
-const matches = checkSecret(secret);
-console.log(matches)
