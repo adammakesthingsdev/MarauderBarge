@@ -10,6 +10,9 @@ import { IncomingMessage } from "http";
 import { Message } from "./components/messages.js";
 import { checkSecret } from "./components/auth.js";
 import Fastify from "fastify";
+import { buyLabel, correctAddress, getRate, } from "./components/labelapi.js";
+import { Address, Rate, ShipRequest, StrictAddress } from "./components/labelapi.js";
+
 
 export class Dinghy {
 
@@ -31,7 +34,40 @@ export class Dinghy {
         this.error = false;
         this.ready = false;
     }
+
+    async printURL(url: string) {
+        return await new Promise((resolve, reject) => {
+            const printRequest: Message.FrigateMessage = {
+                type: "PrintReq",
+                params: { url: url }
+            };
+
+            this.connection.sendMessage(printRequest);
+
+            setTimeout(() => {
+                reject(new Errors.ShipError({
+                    name: "PrintFailed",
+                    message: "Dinghy did not respond in time!"
+                }));
+            }, 1000);
+
+            this.connection.onPrintResp((req) => {
+                if (!req.success) {
+                    reject(new Errors.ShipError({
+                        name: "PrintFailed",
+                        message: req.reason ?? ""
+                    }));
+                }
+                resolve(":)");
+                console.log(":D");
+            });
+        }).catch((e) => {
+            console.log("caught one!!");
+            console.error(e);
+        });
+    }
 }
+
 
 export class FrigateServer {
     wss: WebSocketServer;
@@ -77,13 +113,30 @@ export class FrigateServer {
             return (dinghies[0]);
         } throw new Errors.DinghyError({
             name: "DinghyNotFound",
-            message: "Dinghy does not exist!"
+            message: "No dinghy found at location!"
         });
     }
 
     handleConnection(ws: WebSocket, req: IncomingMessage, server: FrigateServer) {
         const connection = new Connection(ws, req, this);
         this.connections.push(connection);
+    }
+
+    async validateAddress(address: Address): Promise<StrictAddress> {
+        const strict: StrictAddress = await correctAddress(address);
+        return strict;
+    }
+
+    async getRate(shipment: ShipRequest): Promise<Rate | undefined> {
+        return (await getRate(shipment));
+    }
+
+    async shipPackage(shipment: ShipRequest) {
+        const printer = this.chooseDinghy(shipment.marina!);
+        const rate = await getRate(shipment);
+        const label = await buyLabel(rate);
+        await printer.printURL(label.labelDownload.pdf);
+        return (label);
     }
 }
 
@@ -93,12 +146,15 @@ export class Connection {
     dinghy: Dinghy | undefined;
     heartbeat!: NodeJS.Timeout;
     pingTimeout!: NodeJS.Timeout;
+    printTimeout!: NodeJS.Timeout;
+    printRespCallback: (res: Message.DinghyPrintResp) => void;
 
 
     constructor(ws: WebSocket, req: IncomingMessage, server: FrigateServer) {
         this.ws = ws;
         this.frigateServer = server;
         this.dinghy = undefined;
+        this.printRespCallback = () => { };
         console.log(`New client ${req.socket.remoteAddress} has connected`);
 
         this.ws.on("message", (msg: string) => {
@@ -119,6 +175,11 @@ export class Connection {
                 const status = message.params as Message.DinghyStatusResp;
                 this.handleStatusResp(status);
                 break;
+            case "PrintResponse":
+                const response = message.params as Message.DinghyPrintResp;
+                this.handlePrintResp(response);
+                break;
+
             default:
                 console.log(`Unexpected message type ${message.type}`);
 
@@ -145,6 +206,14 @@ export class Connection {
             this.dinghy!.ready = status.ready;
             clearInterval(this.pingTimeout);
         }
+    }
+
+    handlePrintResp(req: Message.DinghyPrintResp) {
+        this.printRespCallback(req);
+    }
+
+    onPrintResp(callback: (req: Message.DinghyPrintResp) => void) {
+        this.printRespCallback = callback;
     }
 
     checkPing() {

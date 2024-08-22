@@ -5,6 +5,7 @@
 
 import ipp, { MimeMediaType, PrintJobRequest } from 'ipp';
 import c from 'config';
+import { Errors } from './errors.js';
 
 interface BinRecord {
     First: string;
@@ -30,8 +31,14 @@ export function printPDF(printer: ipp.Printer, pdf: Buffer) {
 
     printer.execute("Print-Job", msg, function (err, res) {
         //console.log(res);
-        console.log("Success!")
-        //console.error(err);
+        if (err || res.statusCode!=="successful-ok") {
+            throw new Errors.ShipError({
+                "name": "PrintFailed", "message": "Print job failed!"
+            });
+        } else {
+            console.log(res);
+        }
+        //console.error(err);}
     });
 }
 

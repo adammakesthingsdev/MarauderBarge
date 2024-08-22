@@ -6,7 +6,7 @@ export namespace Message {
 
     //Generic message from dinghy
     export interface DinghyMessage {
-        type: "RegisterReq" | "StatusResp";
+        type: "RegisterReq" | "StatusResp" | "PrintResponse";
         params: any;
     }
 
@@ -42,6 +42,12 @@ export namespace Message {
         ready: boolean;
         reason: string | "";
         name: string;
+    }
+
+    export interface DinghyPrintResp {
+        success: boolean;
+        reason?: string;
+        name?: string;
     }
 
     // Print request!!!

@@ -1,0 +1,76 @@
+POST http://localhost:3001/validateAddress HTTP/1.1
+Content-Type: application/json
+
+{
+    "name":"Adam Greenberg",
+    "addressLine1":"15 fals road",
+    "cityLocality":"shelbern",
+    "stateProvince": "vurmont",
+    "countryCode":"united stayts",
+    "postalCode":"054"
+}
+
+################################################################################
+
+POST http://localhost:3001/getRate HTTP/1.1
+Content-Type: application/json
+
+{
+    "toAddr": {
+        "name":"Adam Greenberg",
+        "addressLine1":"15 fals road",
+        "cityLocality":"shelburne",
+        "stateProvince": "vt",
+        "countryCode":"united states",
+        "postalCode":"05482"
+    },
+    "fromAddr": {
+        "name":"Joey B.",
+        "addressLine1":"1600 pensilvania avenue",
+        "cityLocality":"washington",
+        "stateProvince": "dc",
+        "countryCode":"americca",
+        "postalCode":""
+    },
+    "package":{
+        "length":4,
+        "width":4,
+        "height":4,
+        "weight":2,
+        "unitWeight":"ounce",
+        "unitLength":"inch"
+    }
+}
+
+################################################################################
+
+POST http://localhost:3001/ship HTTP/1.1
+Content-Type: application/json
+
+{
+    "toAddr": {
+        "name":"Adam Greenberg",
+        "addressLine1":"15 fals road",
+        "cityLocality":"shelburne",
+        "stateProvince": "vt",
+        "countryCode":"united states",
+        "postalCode":"05482"
+    },
+    "fromAddr": {
+        "name":"Joey B.",
+        "addressLine1":"1600 pensilvania avenue",
+        "cityLocality":"washington",
+        "stateProvince": "dc",
+        "countryCode":"americca",
+        "postalCode":""
+    },
+    "package":{
+        "length":4,
+        "width":4,
+        "height":4,
+        "weight":2,
+        "unitWeight":"ounce",
+        "unitLength":"inch"
+    },
+    "marina":"library"
+}

@@ -32,8 +32,7 @@ const request:ShipRequest = {
         unitWeight: 'ounce',
         unitLength: 'inch',
         description: 'Hack Club swag!'
-    },
-    trackingRequired:true
+    }
 }
 
 async function testBuy(){

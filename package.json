@@ -7,6 +7,7 @@
     "config": "^3.3.12",
     "dotenv": "^16.4.5",
     "fastify": "^4.28.1",
+    "fluent-json-schema": "^5.0.0",
     "google-auth-library": "^9.13.0",
     "ipp": "^2.0.1",
     "node-downloader-helper": "^2.1.9",

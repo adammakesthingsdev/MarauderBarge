@@ -8,8 +8,9 @@ import { GoogleAuth } from "google-auth-library";
 import { AddressValidationClient } from "@googlemaps/addressvalidation";
 import { Params } from "shipengine/esm/get-rates-with-shipment-details/types/public-params";
 import { CreateLabelFromRateTypes } from "shipengine/esm/create-label-from-rate";
-import { printFromURL } from "./print.js";
+import { Errors } from "./errors.js";
 import 'dotenv/config';
+//import { API } from "./routes.js";
 
 const shipengine = new ShipEngine(process.env.SHIPENGINE_API!);
 
@@ -19,7 +20,7 @@ const auth = new GoogleAuth({
 });
 const addressvalidationClient = new AddressValidationClient({ auth: auth });
 
-interface Address {
+export interface Address {
     name: string;
     companyName?: string;
     phone?: string;
@@ -31,7 +32,7 @@ interface Address {
     countryCode: string;
 }
 
-interface Package {
+export interface Package {
     length: number;
     width: number;
     height: number;
@@ -45,15 +46,15 @@ export interface ShipRequest {
     toAddr: Address;
     fromAddr: Address;
     package: Package;
-    trackingRequired: boolean;
+    marina?: string;
 }
 
-interface StrictAddress extends Address {
+export interface StrictAddress extends Address {
     phone: string;
-    addressResidentialIndicator: "yes" | "no" | "unknown"
+    addressResidentialIndicator: "yes" | "no" | "unknown";
 }
 
-interface Rate {
+export interface Rate {
     carrier: string;
     price: number;
     rate: string;
@@ -76,34 +77,40 @@ export async function correctAddress(rawAddress: Address): Promise<StrictAddress
     };
 
     const response = await addressvalidationClient.validateAddress(request);
-
-    if (response === undefined) { throw Error("Address API failed!") }
-    else {
-        const correctedAddress = response[0].result!.address!.postalAddress!;
-        let formatted: StrictAddress;
-
-        if (response[0].result!.verdict!.addressComplete) {
-            console.log("Address found!");
-            const corrected: StrictAddress = {
-                name: rawAddress.name,
-                addressLine1: correctedAddress.addressLines![0],
-                addressLine2: correctedAddress.addressLines![1],
-                cityLocality: correctedAddress.locality!,
-                stateProvince: correctedAddress.administrativeArea!,
-                postalCode: correctedAddress.postalCode!,
-                countryCode: correctedAddress.regionCode!,
-                phone: "1-855-625-HACK",
-                addressResidentialIndicator: "yes",
-            };
-            console.log(response[0].result?.address?.formattedAddress + "\n")
-            return (corrected)
-
-        } else { throw new Error("Address not found!") }
+    if (response == undefined) {
+        throw new Errors.ShipError({
+            name: "AddressError", message: "Address API failed!"
+        });
     }
+
+    const correctedAddress = response[0].result!.address!.postalAddress!;
+    let formatted: StrictAddress;
+
+    if (!response[0].result!.verdict!.addressComplete) {
+        throw new Errors.ShipError({
+            name: "BadAddress", message: "Address not complete!"
+        });
+    }
+
+    console.log("Address found!");
+    const corrected: StrictAddress = {
+        name: rawAddress.name,
+        addressLine1: correctedAddress.addressLines![0],
+        addressLine2: correctedAddress.addressLines![1],
+        cityLocality: correctedAddress.locality!,
+        stateProvince: correctedAddress.administrativeArea!,
+        postalCode: correctedAddress.postalCode!,
+        countryCode: correctedAddress.regionCode!,
+        phone: "1-855-625-HACK",
+        addressResidentialIndicator: "yes",
+    };
+    console.log(response[0].result?.address?.formattedAddress + "\n");
+    return (corrected);
+
+
 }
 
-
-export async function getRate(shipRequest: ShipRequest): Promise<Rate | undefined> {
+export async function getRate(shipRequest: ShipRequest): Promise<Rate> {
     const shipTo = await correctAddress(shipRequest.toAddr);
     const shipFrom = await correctAddress(shipRequest.fromAddr);
 
@@ -127,34 +134,35 @@ export async function getRate(shipRequest: ShipRequest): Promise<Rate | undefine
             },],
         },
     };
-
     try {
         const result = await shipengine.getRatesWithShipmentDetails(options);
 
-        console.log("Best located rate:");
-        //console.log(result);
+        const rates = result.rateResponse.rates;
+        if (rates == null || rates == undefined) {
+            throw new Errors.ShipError({
+                name: "NoAvailableRate",
+                message: "Could not find a shipping rate!"
+            });
+        }
 
-        const rates = result.rateResponse.rates ?? [];
         const filteredRates = rates.filter(function (rate) {
             return rate.trackable && rate.packageType == "package";
         });
-        //console.log(filteredRates)
 
         const bestRate = filteredRates[0];
-
-        console.log(`Service: ${bestRate.serviceType}`)
-        console.log(`Shipping amount: $${bestRate.shippingAmount.amount} USD`)
-        console.log(`Delivery days: ${bestRate.carrierDeliveryDays}\n`)
 
         return {
             carrier: bestRate.carrierFriendlyName,
             service: bestRate.serviceType,
             rate: bestRate.rateId,
             price: bestRate.shippingAmount.amount,
-        }
-
-    } catch (e) {
-        console.log("Error creating rates: ", e);
+        };
+    }
+    catch (e: any) {
+        console.log(e);
+        throw new Errors.ShipError({
+            name: "ShipmentFailed", message: "Unknown error fetching rate!"
+        });
     }
 }
 
@@ -166,17 +174,17 @@ export async function buyLabel(rate: Rate) {
         labelFormat: "pdf",
         labelDownloadType: "url",
         displayScheme: "label"
-    }
+    };
 
     try {
         const result = await shipengine.createLabelFromRate(params);
-        console.log("Label purchased! Downloading pdf...\n");
-        printFromURL(result.labelDownload.pdf);
-        console.log(`Tracking number: ${result.trackingNumber}`)
-
-        //console.log(result);
-    } catch (e: any) {
-        console.log("Error creating label: ", e.message);
+        console.log(`Tracking number: ${result.trackingNumber}`);
+        return (result);
     }
-
+    catch (e) {
+        console.log(e);
+        throw new Errors.ShipError({
+            name: "ShipmentFailed", message: "Failed to purchase label!"
+        });
+    }    //printFromURL(result.labelDownload.pdf);
 }

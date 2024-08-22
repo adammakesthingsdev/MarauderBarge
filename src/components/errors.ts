@@ -15,5 +15,21 @@ export namespace Errors {
             this.message = message;
         }
     }
+
+    type ShipErrorName = "BadAddress" | "NoAvailableRate" |
+    "ShipmentFailed" | "AddressError" | "PrintFailed";
+    export class ShipError extends Error {
+        name: ShipErrorName;
+        message: string;
+
+        constructor({ name, message }: {
+            name: ShipErrorName;
+            message: string;
+        }) {
+            super();
+            this.name = name;
+            this.message = message;
+        }
+    }
 }
 
