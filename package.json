@@ -12,6 +12,7 @@
     "ipp": "^2.0.1",
     "node-downloader-helper": "^2.1.9",
     "pdfkit": "^0.15.0",
+    "pocketbase": "^0.21.4",
     "shipengine": "^1.0.7",
     "simple-crypto-js": "^3.0.1"
   },
@@ -20,8 +21,8 @@
     "build": "tsc -p tsconfig.json",
     "start": "node dist/apiwrapper.js",
     "ship": "node dist/test.js",
-    "dinghy": "node dist/dinghy.js",
-    "frigate": "node dist/frigate.js"
+    "dinghy": "node --es-module-specifier-resolution=node dist/dinghy.js ",
+    "frigate": "node --es-module-specifier-resolution=node dist/frigate.js"
   },
   "type": "module",
   "devDependencies": {
@@ -31,7 +32,7 @@
     "@types/node": "^22.3.0",
     "@types/pdfkit": "^0.13.4",
     "@types/ws": "^8.5.12",
-    "typescript": "^5.5.4",
+    "typescript": "^5.7.0-dev.20240823",
     "ws": "^8.18.0"
   }
 }

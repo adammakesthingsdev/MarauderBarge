@@ -8,7 +8,7 @@ import { encodeSecret } from "./components/auth.js";
 import { Message } from "components/messages.js";
 import config from 'config';
 import { printFromURL } from "./components/print.js";
-import { Errors } from "components/errors.js";
+import { Errors } from "./components/errors";
 
 
 const me: Message.DinghyMessage = {

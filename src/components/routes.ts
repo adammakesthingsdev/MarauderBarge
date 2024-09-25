@@ -4,7 +4,7 @@
 
 import { FastifyInstance, FastifyPluginOptions } from "fastify";
 import S from "fluent-json-schema";
-import { FrigateServer } from "frigateserver";
+import { FrigateServer } from "../frigateserver";
 import { Address, ShipRequest } from "./labelapi";
 
 
@@ -49,12 +49,12 @@ async function routes(fastify: FastifyInstance, options: FastifyPluginOptions) {
     const shipSchema = {
         $id: "shipment",
         type: "object",
-        required: ["toAddr", "fromAddr", "package", "marina"],
+        required: ["toAddr", "fromAddr", "package", "location"],
         properties: {
             toAddr: { $ref: "address" },
             fromAddr: { $ref: "address" },
             package: { $ref: "package" },
-            marina: { type: "string" }
+            location: { type: "string" }
         }
     };
 
@@ -66,7 +66,7 @@ async function routes(fastify: FastifyInstance, options: FastifyPluginOptions) {
             toAddr: { $ref: "address" },
             fromAddr: { $ref: "address" },
             package: { $ref: "package" },
-            marina: { type: "string" }
+            location: { type: "string" }
         }
     };
 
@@ -85,7 +85,13 @@ async function routes(fastify: FastifyInstance, options: FastifyPluginOptions) {
     });
 
     fastify.get("/listDinghies", (request, reply) => {
-        return (JSON.stringify(server.dinghyNames));
+        return (JSON.stringify(server.dinghies.map((dinghy) => {
+            return ({
+                "name": dinghy.name,
+                "location": dinghy.location,
+                "connected": dinghy.connected
+            });
+        })));
     });
 
     fastify.post("/validateAddress", {

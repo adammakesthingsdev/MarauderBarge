@@ -5,8 +5,6 @@
 
 import config from 'config';
 import { SimpleCrypto } from "simple-crypto-js";
-import { createServer, IncomingMessage } from 'http';
-
 
 export function getTimestamp() {
     const fivemin = 1000 * 60 * 5;

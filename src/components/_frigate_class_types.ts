@@ -6,4 +6,5 @@ export interface DinghyConfig {
     name: string;
     location: string;
     type: string;
+    id?: string;
 }

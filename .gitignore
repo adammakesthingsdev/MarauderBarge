@@ -5,3 +5,7 @@ dist/
 .vscode/
 config/default.json
 node_modules/
+
+pocketbase.exe
+pb_data/
+pb_migrations/

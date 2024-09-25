@@ -10,7 +10,6 @@ import { Params } from "shipengine/esm/get-rates-with-shipment-details/types/pub
 import { CreateLabelFromRateTypes } from "shipengine/esm/create-label-from-rate";
 import { Errors } from "./errors.js";
 import 'dotenv/config';
-//import { API } from "./routes.js";
 
 const shipengine = new ShipEngine(process.env.SHIPENGINE_API!);
 
@@ -46,7 +45,7 @@ export interface ShipRequest {
     toAddr: Address;
     fromAddr: Address;
     package: Package;
-    marina?: string;
+    location?: string;
 }
 
 export interface StrictAddress extends Address {
